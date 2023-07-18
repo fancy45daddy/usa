@@ -7,7 +7,7 @@ unlink = []
 
 async def main():
     async with aiohttp.ClientSession(headers={'user-agent':fake_useragent.UserAgent().chrome}) as client:
-        async with client.get('https://www.iole.tv/vodplay/29429-1-1.html') as episode:
+        async with client.get('https://www.iole.tv/vodplay/29429-1-2.html') as episode:
             html = bs4.BeautifulSoup(await episode.text(), 'lxml')
             async with client.get(json.loads(html.find('script', string=re.compile('m3u8')).string.replace('var player_aaaa=', '')).get('url')) as m3u8:
                 with tempfile.NamedTemporaryFile(delete=False) as tmp:
