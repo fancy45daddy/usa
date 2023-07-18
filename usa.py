@@ -12,7 +12,7 @@ async def main():
             async with client.get(json.loads(html.find('script', string=re.compile('m3u8')).string.replace('var player_aaaa=', '')).get('url')) as m3u8:
                 with tempfile.NamedTemporaryFile(delete=False) as tmp:
                     sys.modules[__name__].unlink += tmp.name,
-                    ffmpeg = await asyncio.create_subprocess_exec('ffmpeg', '-y', '-protocol_whitelist', 'http,https,file,tls,tcp,pipe', '-i', '-', '-f', 'mp4', tmp.name, stdin=asyncio.subprocess.PIPE)
+                    ffmpeg = await asyncio.create_subprocess_exec('ffmpeg', '-y', '-protocol_whitelist', 'http,https,file,tls,tcp,pipe,crypto', '-i', '-', '-f', 'mp4', tmp.name, stdin=asyncio.subprocess.PIPE)
                     await ffmpeg.communicate(await m3u8.content.read())
                     api = huggingface_hub.HfApi()
                     future = api.upload_file(path_or_fileobj=tmp.name, path_in_repo=''.join((zhconv.convert(html.find('title').string.split()[0], 'zh-cn'), '/', '01', '.mp4')), repo_id='chaowenguo/video', repo_type='model', run_as_future=True)
